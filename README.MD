@@ -1,5 +1,5 @@
 # Welcome to Switch ON (an FPGA based Switch).
-====
+------
 * [**src**] (https://github.com/shivamchoudhary/SwitchON/tree/develop/src) Contains all the source code.
  * [**hardware**] (https://github.com/shivamchoudhary/SwitchON/tree/develop/src/hardware) - Contains the hardware code.
  * [**software**](https://github.com/shivamchoudhary/SwitchON/tree/develop/src/software) - Contains the software code.
