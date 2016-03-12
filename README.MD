@@ -5,9 +5,8 @@
  * [**software**](https://github.com/shivamchoudhary/SwitchON/tree/develop/src/software) - Contains the software code.
 
 * [**test**](https://github.com/shivamchoudhary/SwitchON/tree/develop/test) Contains various sanity and integrations tests.
-
 - All the folders will have their own makefiles. We are thinking of providing a universal makefile but we will see.
 
 ## Architecture
-
+We plan to interface the FPGA's Memory using a DMA controller. The idea is to generate 
 
