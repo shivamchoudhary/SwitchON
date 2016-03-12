@@ -3,4 +3,7 @@
  * hw - Contains the hardware code.
  * sw - Contains the software code.
 
+* test Contains various sanity and integrations tests.
+
+
 
