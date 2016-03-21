@@ -5,6 +5,7 @@
 #include <netinet/tcp.h>
 #include <time.h>
 #include "packet_gen.h"
+#include "config.h"
 
 void makePacket(int srcip,int dstip,int srcport, int dstport){
         struct ipheader ipheader_t;
@@ -18,5 +19,6 @@ int main(int argc, char *argv[]){
         for (int i=0;i<NUM_PACKETS;i++){
                 printf("%d\n",rand()%65536);
         }
+        printf("%s",OUTPUT_FOLDER);
         return 0;
 }
