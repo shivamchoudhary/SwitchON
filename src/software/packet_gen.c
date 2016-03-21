@@ -4,8 +4,10 @@
 #include <netinet/ip.h>
 #include <netinet/tcp.h>
 #include <time.h>
+#include <string.h>
 #include "packet_gen.h"
 #include "config.h"
+#include "common.h"
 
 void makePacket(int srcip,int dstip,int srcport, int dstport){
         struct ipheader ipheader_t;
@@ -16,9 +18,15 @@ void makePacket(int srcip,int dstip,int srcport, int dstport){
 }
 
 int main(int argc, char *argv[]){
-        for (int i=0;i<NUM_PACKETS;i++){
-                printf("%d\n",rand()%65536);
+        for (int i=START_PORT; i<START_PORT+NUM_PACKETS; i++){
+                char fname[100];
+                sprintf(fname,"../../output/%d.pkt",i);
+                FILE *fd;
+                fd =fopen(fname,"w+");
+                if (fd==NULL){
+                        printf("Failed to open file %s",fname);
+                }
+                fprintf(fd,"TEST");
         }
-        printf("%s",OUTPUT_FOLDER);
         return 0;
 }
