@@ -6,7 +6,6 @@
 #include <time.h>
 #include <string.h>
 #include "packet_gen.h"
-#include "config.h"
 #include "common.h"
 
 void makePacket(int srcip,int dstip,int srcport, int dstport){
@@ -26,7 +25,10 @@ int main(int argc, char *argv[]){
                 if (fd==NULL){
                         printf("Failed to open file %s",fname);
                 }
-                fprintf(fd,"TEST");
+
+                fprintf(fd,"TEST\n");
+                binary(rand()%3);
+        
         }
         return 0;
 }
