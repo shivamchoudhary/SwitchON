@@ -16,9 +16,9 @@ To illustrate what we aim to solve,consider the following scenario.
 
         | Output1       | Output 2      | Output 3        |
         | ------------- |:-------------:| -----:|
-Input 1        | 2             | 1             |   1   |
-Input 2        | 1             | 0             |   2   |
-Input 3        | 2             | 2             |    0  |
+|Input 1        | 2             | 1             |   1   |
+|Input 2        | 1             | 0             |   2   |
+|Input 3        | 2             | 2             |    0  |
 
 ##Links 
 [This](http://www.cs.columbia.edu/~hgs/research/projects/newudpl/) is the link 
