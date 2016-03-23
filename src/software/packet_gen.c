@@ -17,6 +17,9 @@ void makePacket(int srcip,int dstip,int srcport, int dstport){
 }
 
 int main(int argc, char *argv[]){
+        
+        time_t t;
+        srand((unsigned) time(&t));
         for (int i=START_PORT; i<START_PORT+NUM_PACKETS; i++){
                 char fname[100];
                 sprintf(fname,"../../output/%d.pkt",i);
@@ -25,7 +28,6 @@ int main(int argc, char *argv[]){
                 if (fd==NULL){
                         printf("Failed to open file %s",fname);
                 }
-
                 fprintf(fd,"TEST\n");
                 binary(rand()%3);
         
