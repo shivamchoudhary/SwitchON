@@ -1,12 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/socket.h>
-#include <netinet/ip.h>
-#include <netinet/tcp.h>
 #include <time.h>
-#include <string.h>
-#include "packet_gen.h"
-int main(int argc, char *argv[]){
+#include "packetgen.h"
+#include "common.h"
+
+int generate(){
         time_t t;
         srand((unsigned) time(&t));
         for (int i=START_PORT; i<START_PORT+NUM_PACKETS; i++){
@@ -15,4 +13,3 @@ int main(int argc, char *argv[]){
         }
         return 0;
 }
-

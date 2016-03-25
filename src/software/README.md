@@ -3,13 +3,18 @@
 
 ### Makefile
 List all your dependencies on the Makefile and add proper directives for 
-generating the executables.
+generating the executables. Read the comments in the makefile to understand more.
+
 
 ### Compile
 All Targets have their own executables. The name of the executable is same as 
-directive
-For Packet Generator:
-        make packet_gen  generates executable packet_gen.
+directive. Also we compile with -Wall so all warnings will be treated as errors.
+
+**Warning: If you don't list your dependencies properly it might so occur that
+the executables will not be generated in proper order.
+
+
+The main executable is main.o which is the entry point to the code.
 
 
 To illustrate what we aim to solve,consider the following scenario.
@@ -55,8 +60,18 @@ for the proxy emulator which can change the packet contents. We will be using
 this as a reference for the project.
 
 ## Files
+Convention:
+Include the files with  appropriate header files. Discuss if we really need to 
+include the file.
 
-Software related code needs to be here. This will include the packet generator 
-and the validator, mostly!
+List the use of your files here:-
+
+1) Makefile: Contains directives to compile all the executables. Generates a
+single output main which serves as entry point.
+
+2) packetgen.c : To generate random packets with (OPT:specified headers)
+        packetgen.h: Contains the header files for the same.
+
+
 
 
