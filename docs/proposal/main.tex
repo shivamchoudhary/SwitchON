@@ -1,0 +1,44 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+\title{\textbf{Switch ON}}
+\author{Ayush Jain (aj2672)\\
+        Donovan Chan (dc3095)\\
+        Shivam Choudhary (sc3973) }
+
+\begin{document}
+
+\maketitle
+
+\section{Aim}
+
+The project aims to simulate a virtual Network Switch that generates IP packets using software and interfaces with the memory of FPGA for switching and scheduling.
+
+\section{Description}
+
+The motivation of the project comes from our interest in optimum packet scheduling to maximise throughput. The project is also a means towards gaining more familiarity with FPGA programming in System Verilog. The idea borrows heavily from \href{https://en.wikipedia.org/wiki/Head-of-line_blocking}{\textbf{Head of Line Blocking}} in a switching fabric.
+
+\subsection{Implementation} 
+
+Packet traffic will be simulated by using a packet generator which will be fed into the simulated ports on software. These packets would then be decoded and processed by the FPGA to determine the destination port for each packet. The motive would be to optimise throughput by rescheduling packets at the input and output ports. 
+
+\section{Milestones}
+    \subsection{Milestone 1}
+    
+        Creating packet generator in C and storing the packets in the memory accessible by FPGA for decoding. 
+    
+    \subsection{Milestone 2}
+    
+        Interfacing the generated packets with the in memory binary search tree
+        and generating longest prefix match for the input packets. 
+        
+    \subsection{Milestone 3}
+        
+        Creating scheduling algorithm to address the head-of-line (HoL) blocking problem for achieving maximum throughput.
+            
+    \subsection{Milestone 4}
+    
+        Completely integrating the various components of the previous milestones into a fully functional virtual network switch. Performance benchmarks and evaluation of the scheduling algorithm will be done in this step. 
+    
+
+\end{document}
