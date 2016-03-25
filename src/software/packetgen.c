@@ -7,7 +7,8 @@
 int generate(){
         time_t t;
         srand((unsigned) time(&t));
-        for (int i=START_PORT; i<START_PORT+NUM_PACKETS; i++){
+	int i = 0;
+        for (i=START_PORT; i<START_PORT+NUM_PACKETS; i++){
                 printf("%i\n",rand()%255);
                 
         }
