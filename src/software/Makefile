@@ -35,8 +35,14 @@ packet_gen.o: packetgen.c packetgen.h common.h
 
 common.o:common.c common.h
 
+# Target based compilation
+
+packetgen:
+	$(CC) $(CFLAGS) packetgen.c packetgen.h common.c common.h
+
 .PHONY: clean
 clean:
 	rm -f *.o a.out main core packet_gen common executable
 .PHONY: all
+
 all: clean packet_gen
