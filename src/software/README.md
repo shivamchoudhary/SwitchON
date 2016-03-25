@@ -7,6 +7,8 @@ generating the executables. Read the comments in the makefile to understand more
 
 
 ### Compile
+## To compile:
+        Type make. It will generate the executable. Run it by ./main 
 All Targets have their own executables. The name of the executable is same as 
 directive. Also we compile with -Wall so all warnings will be treated as errors.
 
