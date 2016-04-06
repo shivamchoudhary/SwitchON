@@ -112,9 +112,11 @@ static struct miscdevice vga_led_misc_device = {
  */
 static int __init vga_led_probe(struct platform_device *pdev)
 {
-	static unsigned char welcome_message[VGA_LED_DIGITS] = {
-		0x3E, 0x7D, 0x77, 0x08, 0x38, 0x79, 0x5E, 0x00};
+//	static unsigned char welcome_message[VGA_LED_DIGITS] = {
+//		0x3E, 0x7D, 0x77, 0x08, 0x38, 0x79, 0x5E, 0x00};
 	int i, ret;
+	static unsigned char welcome_message[VGA_LED_DIGITS] = {
+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
 	/* Register ourselves as a misc device: creates /dev/vga_led */
 	ret = misc_register(&vga_led_misc_device);
@@ -142,7 +144,8 @@ static int __init vga_led_probe(struct platform_device *pdev)
 
 	/* Display a welcome message */
 	for (i = 0; i < VGA_LED_DIGITS; i++)
-		write_digit(i, welcome_message[i]);
+		;
+//		write_digit(i, welcome_message[i]);
 
 	return 0;
 

@@ -3,7 +3,7 @@
 
 #include <linux/ioctl.h>
 
-#define VGA_LED_DIGITS 8
+#define VGA_LED_DIGITS 4
 
 typedef struct {
   unsigned char digit;    /* 0, 1, .. , VGA_LED_DIGITS - 1 */

@@ -7,8 +7,6 @@
  */
 
 #include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
 #include "vga_led.h"
 #include <sys/ioctl.h>
 #include <sys/types.h>
@@ -51,14 +49,11 @@ void write_segments(const unsigned char segs[24])
 
 char* generate(){
 	int i = 0;
-	static char input[4];
-        time_t t;
-        srand((unsigned) time(&t));
-        for (i=0; i<4; i++){
+	static char input[32];
+        for (i=0; i<32; i++){
                 input[i] = rand()%255;
-		printf("%i",input[i]);
+//                input[i] = 2 ;
         }
-	printf("\n");
         return input;
 }
 
@@ -90,13 +85,14 @@ int main()
   print_segment_info();
 
   for (i = 0 ; i < 32 ; i++) {
-   input = generate();
-//    unsigned char c0 = *(input);
-//    memmove(input, input+1, VGA_LED_DIGITS - 1);
-//    input[VGA_LED_DIGITS - 1] = c0;
+    unsigned char c0 = *(input);
+    memmove(input, input+1, VGA_LED_DIGITS - 1);
+    input[VGA_LED_DIGITS - 1] = c0;
     write_segments(input);
-    usleep(1600000);}
-    printf("VGA LED Userspace program terminating\n");
+    printf("%02x\n", input);
+    usleep(400000);
+  }
+  
+  printf("VGA LED Userspace program terminating\n");
   return 0;
 }
-
