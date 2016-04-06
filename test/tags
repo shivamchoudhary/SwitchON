@@ -1,0 +1,19 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+Fifo	fifo.py	/^class Fifo(object):$/;"	c
+PacketGenerator	packetgen.py	/^class PacketGenerator(object):$/;"	c
+Queue	fifo.py	/^import Queue$/;"	i
+Queue	scheduler.py	/^import Queue$/;"	i
+__init__	fifo.py	/^    def __init__(self):$/;"	m	class:Fifo
+__init__	packetgen.py	/^    def __init__(self):$/;"	m	class:PacketGenerator
+fifo	fifo.py	/^    fifo = Fifo()$/;"	v
+generatePacket	packetgen.py	/^    def generatePacket(self):$/;"	m	class:PacketGenerator
+p	fifo.py	/^    p = packetgen.PacketGenerator()$/;"	v
+p	packetgen.py	/^    p = PacketGenerator()$/;"	v
+packetgen	fifo.py	/^import packetgen$/;"	i
+putFifo	fifo.py	/^    def putFifo(self,data):$/;"	m	class:Fifo
+random	packetgen.py	/^import random$/;"	i
