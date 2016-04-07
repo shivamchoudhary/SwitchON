@@ -1,0 +1,8 @@
+{
+        "num_ports":4,
+        "num_packets":4,
+        "_comments":{
+                "num_ports":"Number of Ports (Input) this dictates the number\"
+                " of ports in the FIFO"
+        }
+}
