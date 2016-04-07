@@ -5,15 +5,19 @@
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.8	//
 Fifo	fifo.py	/^class Fifo(object):$/;"	c
+Input	scheduler.py	/^class Input(object):$/;"	c
 PacketGenerator	packetgen.py	/^class PacketGenerator(object):$/;"	c
 Queue	fifo.py	/^import Queue$/;"	i
-Queue	scheduler.py	/^import Queue$/;"	i
 __init__	fifo.py	/^    def __init__(self):$/;"	m	class:Fifo
 __init__	packetgen.py	/^    def __init__(self):$/;"	m	class:PacketGenerator
+__init__	scheduler.py	/^    def __init__(self):$/;"	m	class:Input
 fifo	fifo.py	/^    fifo = Fifo()$/;"	v
+fifo	scheduler.py	/^import fifo$/;"	i
 generatePacket	packetgen.py	/^    def generatePacket(self):$/;"	m	class:PacketGenerator
 p	fifo.py	/^    p = packetgen.PacketGenerator()$/;"	v
-p	packetgen.py	/^    p = PacketGenerator()$/;"	v
+p	packetgen.py	/^    p = PacketGenerator()$/;"	v	class:PacketGenerator
 packetgen	fifo.py	/^import packetgen$/;"	i
+packetgen	scheduler.py	/^import packetgen$/;"	i
 putFifo	fifo.py	/^    def putFifo(self,data):$/;"	m	class:Fifo
 random	packetgen.py	/^import random$/;"	i
+s	scheduler.py	/^    s = Input()$/;"	v	class:Input

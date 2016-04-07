@@ -9,8 +9,9 @@ class PacketGenerator(object):
         """
         generates a random integer between 0 and 255
         """
-        return '{0:8b}'.format(random.randint(0,255))
-        
+        #Generates the integer between 0 and 255 converts to binary with padding
+        genint = bin(random.randint(1,255)) 
+        return genint[2:].zfill(8) 
 
 
 
@@ -19,6 +20,6 @@ if __name__=="__main__":
 
     p = PacketGenerator()
     for i in range(1,10):
-        print p.generatePacket()[-2:]
+        print p.generatePacket()
 
 

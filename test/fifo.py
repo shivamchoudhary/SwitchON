@@ -24,3 +24,6 @@ if __name__=="__main__":
     p = packetgen.PacketGenerator()
     for i in range(0,10):
         fifo.putFifo(p.generatePacket())
+
+    while not(fifo.fifo.empty()):
+        print fifo.fifo.get()
