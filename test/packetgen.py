@@ -13,9 +13,6 @@ class PacketGenerator(object):
         genint = bin(random.randint(1,255)) 
         return genint[2:].zfill(8) 
 
-
-
-
 if __name__=="__main__":
 
     p = PacketGenerator()
