@@ -33,12 +33,13 @@ void write_packet(const unsigned char *segs, int length, int src_port)
 char* generate_packet(int length, char seed, char port){
     char* packet = (char *) malloc(length);
     int i;
-    packet[0] = seed;
-    packet[1] = port;
+    packet[1] = seed;
+    packet[0] = port;
     srand((unsigned) seed);
-    for(i=2; i<length; i++){
-        packet[i] = rand()%256;
+    for(i=2; i<length-1; i++){
+        packet[i] = rand()%255 + 1;
     }
+    packet[i] = '0';
     return packet;
 }
 
@@ -58,7 +59,7 @@ int main()
     static char *input;
     for (i = 0 ; i < NUM_PACKETS ; i++) {
         int length = rand()%96 + 5;
-        char seed = rand()%256;
+        char seed = rand()%255 + 1;
         char dest_port = rand()%4;
         char src_port = rand()%4;
         input = generate_packet(length, seed, dest_port);
