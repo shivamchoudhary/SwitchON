@@ -55,8 +55,8 @@ char* generate(){
         time_t t;
         srand((unsigned) time(&t));
         for (i=0; i<4; i++){
-                input[i] = rand()%255;
-		printf("%i",input[i]);
+                input[i] = rand()%4;
+		printf("%i ",input[i]);
         }
 	printf("\n");
         return input;
