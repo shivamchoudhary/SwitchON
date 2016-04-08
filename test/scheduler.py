@@ -9,9 +9,8 @@ class Scheduler():
 
     def __init__(self):
 
-        self.fifo0 = fifo.Fifo('fifo0',2)
+        self.fifo0 = fifo.Fifo('fifo0',1)
         self.fifo0.enqueue('pkt010')
-        self.fifo0.enqueue('packet011')
         self.fifo1 = fifo.Fifo('fifo1',1)
         self.fifo1.enqueue('pkt111')
         self.fifo2 = fifo.Fifo('fifo2',1)
@@ -27,7 +26,7 @@ class Scheduler():
                 } 
     def schedule(self):
         counter = 0
-        while counter!=5:    
+        while counter!=4:    
             #Cross bar output. <Port Number>:(T/F,Packet)
             crossbar_output = {
                     "00":(False,None),
@@ -50,21 +49,25 @@ class Scheduler():
                     packet,output_port = self.packet_queue[fifo.name]
                     self.packet_queue[fifo.name] = (None,None)
                     input[fifo.name] = (packet,output_port)
+                    log.debug("FIFO not in rd_enable state %s extracted %s from"
+                            " Queue",fifo.name,packet)
                 elif packet==-2:
                     packet,output_port = (None,None)
                     input[fifo.name] = (None,None)
                 else:
                     output_port = packet[-2:]
                     input[fifo.name] = (packet,output_port) 
-
                 # CrossBar Switch
                 if packet:
                     if not(crossbar_output[output_port][0]):
                         crossbar_output[output_port] = (True,packet)
                         counter+=1
+                        fifo.rd_enable = True
                     else:
                         self.packet_queue[fifo.name]  = (packet,output_port)
                         fifo.rd_enable = False
+                        log.debug("FIFO %s rd_enable=False for next cycle",
+                                fifo.name)
             print "INPUT"
             pprint.pprint(input)
             print "OUTPUT"
