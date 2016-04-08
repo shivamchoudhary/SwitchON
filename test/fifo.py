@@ -2,7 +2,7 @@ import Queue
 import packetgen
 import Common
 
-log = Common.SwitchONlogger('root')
+log = Common.SwitchONlogger('fifo')
 
 class Fifo(object):
     """
@@ -33,7 +33,6 @@ class Fifo(object):
         self.rd_enable = rd_enable # It should be true first time
         self.wr_enable = wr_enable
         self.fifo = Queue.Queue(self.size)
-         
     
     def enqueue(self,data):
         """
@@ -45,11 +44,10 @@ class Fifo(object):
         if not self.fifo.full() and self.wr_enable:
             log.debug("Data=%s inserted in Queue",data)
             self.fifo.put(str(data)) # Convert to string for manipulations
-            self.counter +=1 # Number of packets in queue
             return True
         else:
             if self.fifo.full():
-                log.warning("Queue is Full!")
+                log.warning("Fifo:%s Queue is Full!",self.name)
             else:
                 log.debug("wr_enable is %s",self.wr_enable)
             return False
@@ -60,25 +58,23 @@ class Fifo(object):
         """
         if self.rd_enable and not(self.fifo.empty()):
             log.info("Returning extracted Value from FIFO:%s",self.name)
-            self.counter-=1 # Packet Dequeued decrement the counter.
             return self.fifo.get()
         else:
+            #Fifo is not empty or rd is disabled
             if not self.rd_enable:
-                log.debug("Fifo is not in rd_enable state")
+                log.debug("Fifo:%s is not in rd_enable state",self.name)
+                return -1
             else:
                 # FIFO is empty 
-                log.debug("FIFO is empty")
-            return False
-    
-    def isConsumed(self):
-        """
-        Returns True if the FIFO is empty else False
-        """
-        if self.counter==0: #Counter is zero FIFO is empty
-            return False
-        log.debug("FIFO: %s is empty",self.name)
-        return True
+                log.debug("FIFO:%s is empty",self.name)
+                return -2
 
+    def isEmpty(self):
+        if self.fifo.empty():
+            return False
+        else:
+            return True
+    
 def main():
     """
     Driver program to run this system
