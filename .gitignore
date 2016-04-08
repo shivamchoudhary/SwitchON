@@ -35,3 +35,9 @@ hello
 
 # Swap File
 *.swp
+
+# Tags
+tags
+
+# Python Precompiled Files
+*.pyc

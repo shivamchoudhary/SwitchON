@@ -1,6 +1,9 @@
 #FIFO Parameters
 
 fifo:
-	python fifo.py 
+	python fifo.py
+
+scheduler:
+	python scheduler.py
 clean:
 	rm *.pyc 
