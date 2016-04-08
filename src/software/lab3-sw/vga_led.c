@@ -78,9 +78,10 @@ static long vga_led_ioctl(struct file *f, unsigned int cmd, unsigned long arg)
 		if (copy_from_user(&vla, (vga_led_arg_t *) arg,
 				   sizeof(vga_led_arg_t)))
 			return -EACCES;
-		if (vla.digit > 8)
-			return -EINVAL;
-		vla.segments = dev.segments[vla.digit];
+//		if (vla.digit > 8)
+//			return -EINVAL;
+		vla.segments = ioread8(dev.virtbase + vla.digit);
+//		vla.segments = dev.segments[vla.digit];
 		if (copy_to_user((vga_led_arg_t *) arg, &vla,
 				 sizeof(vga_led_arg_t)))
 			return -EACCES;
