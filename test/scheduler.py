@@ -1,93 +1,81 @@
 import fifo
-import packetgen
+import pprint 
+import Common
 
-    
-class Scheduler(object):
-    """
-    Generic scheduler which inputs out the packet one by one.
-    """
+log  = Common.SwitchONlogger('Scheduler')
+
+class Scheduler():
 
 
     def __init__(self):
-        self.fifo_list  = []
-        self.fifo1 = fifo.Fifo('fifo1')
-        self.fifo2 = fifo.Fifo('fifo2')
-        self.fifo3 = fifo.Fifo('fifo3')
-        self.fifo4 = fifo.Fifo('fifo4')
-        self.portstatus = {}
-        self.portstatus['fifo1'] = True
-        self.portstatus['fifo2'] = False
-        self.portstatus['fifo3'] = False
-        self.portstatus['fifo4'] = False
-        self.fifo_list.append(self.fifo1)
-        self.fifo_list.append(self.fifo2)
-        self.fifo_list.append(self.fifo3)
-        self.fifo_list.append(self.fifo4)
 
-    def instantiateFifo(self):
-        p = packetgen.PacketGenerator()
-        for fifo in self.fifo_list:
-            for i in range(0,4):
-                fifo.putFifo(p.generatePacket())
+        self.fifo0 = fifo.Fifo('fifo0',1)
+        self.fifo0.enqueue('pkt010')
+        self.fifo1 = fifo.Fifo('fifo1',1)
+        self.fifo1.enqueue('pkt111')
+        self.fifo2 = fifo.Fifo('fifo2',1)
+        self.fifo2.enqueue('pkt210')
+        self.fifo3 = fifo.Fifo('fifo3',1)
+        self.fifo3.enqueue('pkt300')
+        self.fifo_list = [self.fifo0,self.fifo1,self.fifo2,self.fifo3]
     
-    def print_contents(self):
-        """
-        Print the contents of the FIFO's
-        """
-        for fifo in self.fifo_list:
-            while not(fifo.fifo.empty()):
-                print fifo.name,fifo.fifo.get()
-
     def schedule(self):
-        """
-        Dequeue a packet,check port number,if currently unoccupied send it out
-        """
-        output_flags = {
-                "00":False,
-                "01":False,
-                "10":False,
-                "11":False
+        #Cross bar output. <Port Number>:(T/F,Packet)
+        crossbar_output = {
+                "00":(False,None),
+                "01":(False,None),
+                "10":(False,None),
+                "11":(False,None)
                 }
-        input_packet = {
-                "fifo1":None,
-                "fifo2":None,
-                "fifo3":None,
-                "fifo4":None
+        #input keeps track if FIFO:(Packet,Port Number)
+        input = {
+                "fifo0":(None,None),
+                "fifo1":(None,None),
+                "fifo2":(None,None),
+                "fifo3":(None,None)
                 }
-        output_packet = {
-                "00":None,
-                "01":None,
-                "10":None,
-                "11":None
-                }
-        while not(self.fifo1.fifo.empty() and self.fifo2.fifo.empty() and 
-                self.fifo3.fifo.empty() and self.fifo4.fifo.empty()):
+        while (self.fifo0.isConsumed() and self.fifo1.isConsumed and 
+                self.fifo3.isConsumed() and self.fifo3.isConsumed()):
+            
+            #Stores packets not sent in a Cycle.<fifoname>:(<Packet>,<Out Port>)
+            packet_queue = {
+                    "fifo1":(None,None),
+                    "fifo2":(None,None),
+                    "fifo3":(None,None),
+                    "fifo4":(None,None)
+                    }
+            log.info("Current packet_queue is \n %s",pprint.pformat(packet_queue))
             for fifo in self.fifo_list:
-                packet = fifo.fifo.get()
-                if not(output_flags[element]):
-                    # Port Empty put the packet here!!
-                    output_flags[packet[-2:]] = True
-                    input_packet[fifo.fifo.name] = packet 
+                """
+                Iterate over all the FIFO's
+                """
+                packet = fifo.deque()     #Extract the packet from a FIFO
+                if packet:
+                    output_port = packet[-2:] # Extract the o/p port number
+                else: #rd_enable was not set in previous cycle
+                    #Extract the packet from the Waiting Queue.
+                    packet,output_port = packet_queue[fifo]
+
+                input[fifo.name] = (packet,output_port)
+                # If crossbar is empty put the packet there and make it True
+                if not(crossbar_output[output_port][0]):
+                    crossbar_output[output_port]=(True,packet)
+                    fifo.rd_enable = True #Enable read for next cycle
                 else:
-                    print "Collision","Port:",element
-            print output_flags
-            output_flags = {
-                "00":False,
-                "01":False,
-                "10":False,
-                "11":False
-                }
+                    #port is occupied don't deque from FIFO
+                    packet_queue[fifo] = (packet,output_port)
+                    fifo.rd_enable=False
+                log.debug("Recieved input is %s",pprint.pformat(input))
+                log.debug("Corresponding output is %s",pprint.pformat(
+                    crossbar_output))
+
+            
+         
 
 
-
-
-
-if __name__=="__main__":
-    # s = Input()
-    # s.fifoInstantiate()
+def main():
     s = Scheduler()
-    s.instantiateFifo()
     s.schedule()
 
-
-
+if __name__=="__main__":
+    main()
