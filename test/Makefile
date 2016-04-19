@@ -5,5 +5,7 @@ fifo:
 
 scheduler:
 	python scheduler.py
+fulkerson:
+	python ford_fulkerson.py
 clean:
 	rm *.pyc 

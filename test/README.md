@@ -9,3 +9,5 @@ How to Run:
 make fifo: Makes the fifo and runs a driver code.
 
 make scheduler: Make the scheduler and runs a driver code
+
+make fulkerson: Make the ford_fulkerson module and run with a  supplied code
