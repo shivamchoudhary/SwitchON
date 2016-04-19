@@ -1,10 +1,3 @@
-/*
- * Userspace program that communicates with the led_vga device driver
- * primarily through ioctls
- *
- * Stephen A. Edwards
- * Columbia University
- */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,14 +10,12 @@
 #include <string.h>
 #include <unistd.h>
 int vga_led_fd;
-int sent[8], received[8];
 
-/* Write the contents of the array to the display */
 void write_segments(const unsigned char segs[24])
 {
   vga_led_arg_t vla;
   int i;
-  for (i = 0 ; i < VGA_LED_DIGITS; i++) {
+  for (i = 1 ; i < VGA_LED_DIGITS ; i++) {
     vla.digit = i;
     vla.segments = segs[i];
     if (ioctl(vga_led_fd, VGA_LED_WRITE_DIGIT, &vla)) {
@@ -38,9 +29,7 @@ char* generate(){
 	int i = 0;
 	static char input[4];
         for (i=1; i<4; i++){
-//		input[i] = 7;	
-		input[i] = rand()%3 + 1;
-		sent[input[i]]++;
+		input[i] = 1;
 		printf("%i ",input[i]);
         }
 	printf("\n");
@@ -50,9 +39,7 @@ char* generate(){
 int main()
 {
   vga_led_arg_t vla;
-  int i;
-  time_t t;
-  srand((unsigned) time(&t));
+  int i, j, k;
   static const char filename[] = "/dev/vga_led";
 
   printf("VGA LED Userspace program started\n");
@@ -61,29 +48,33 @@ int main()
     return -1;
   }
 
-  for(i=0; i<8; i++){
-    sent[i] = 0;
-    received[i] = 0;
-  }	
-
   static char *input;
-  for (i = 0 ; i < 32 ; i++) {
+//  for (i = 0 ; i < 32 ; i++) {
     input = generate();
     write_segments(input);
-//    usleep(1600000);
-
-  }
+//    usleep(4000000);
+//  }
 
   printf("VGA LED Userspace program terminating\n");
-  for(i=1; i<4; i++){
-    vla.digit = 7-i;
+ // for(i=1; i<4; i++){
+    vla.digit = 6;
     if (ioctl(vga_led_fd, VGA_LED_READ_DIGIT, &vla)) {
       perror("ioctl(VGA_LED_READ_DIGIT) failed");
       return;
     }
-    received[i] = vla.segments;
-    printf("%i:%i\n", sent[i], received[i]);
-  }
+    j = vla.segments;
+    printf("WRITE COUNT: %i\n", j);
+
+    printf("PACKETS:\n");
+    for(; k<j; k++){
+      vla.digit = i;
+      if (ioctl(vga_led_fd, VGA_LED_READ_DIGIT, &vla)) {
+        perror("ioctl(VGA_LED_READ_DIGIT) failed");
+        return;
+      }
+      printf("%i", vla.segments);
+    }
+    printf("\n");
+ // }
   return 0;
 }
-

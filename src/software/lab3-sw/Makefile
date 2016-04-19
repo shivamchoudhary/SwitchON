@@ -10,7 +10,9 @@ else
 	KERNEL_SOURCE := /usr/src/linux
         PWD := $(shell pwd)
 
-default: module hello
+default: module hello read_ram_size read_ram read_write_test
+	 rmmod vga_led.ko
+	 insmod vga_led.ko
 
 module:
 	${MAKE} -C ${KERNEL_SOURCE} SUBDIRS=${PWD} modules

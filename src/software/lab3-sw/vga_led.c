@@ -63,7 +63,6 @@ static void write_digit(int digit, u8 segments)
 static long vga_led_ioctl(struct file *f, unsigned int cmd, unsigned long arg)
 {
 	vga_led_arg_t vla;
-
 	switch (cmd) {
 	case VGA_LED_WRITE_DIGIT:
 		if (copy_from_user(&vla, (vga_led_arg_t *) arg,
@@ -75,13 +74,16 @@ static long vga_led_ioctl(struct file *f, unsigned int cmd, unsigned long arg)
 		break;
 
 	case VGA_LED_READ_DIGIT:
+		printk(KERN_INFO "HCECKPOINT 1");
 		if (copy_from_user(&vla, (vga_led_arg_t *) arg,
 				   sizeof(vga_led_arg_t)))
 			return -EACCES;
-//		if (vla.digit > 8)
-//			return -EINVAL;
+		printk(KERN_INFO "CHECKPOINT 2");
+		if (vla.digit > 8)
+			return -EINVAL;
+//		printk(KERN_INFO "VIRTBASE: %i, DIGIT %i", dev.virtbase, vla.digit);
 		vla.segments = ioread8(dev.virtbase + vla.digit);
-//		vla.segments = dev.segments[vla.digit];
+	//	vla.segments = dev.segments[vla.digit];
 		if (copy_to_user((vga_led_arg_t *) arg, &vla,
 				 sizeof(vga_led_arg_t)))
 			return -EACCES;
@@ -116,7 +118,7 @@ static int __init vga_led_probe(struct platform_device *pdev)
 //	static unsigned char welcome_message[VGA_LED_DIGITS] = {
 //		0x3E, 0x7D, 0x77, 0x08, 0x38, 0x79, 0x5E, 0x00};
 	int i, ret;
-	static unsigned char welcome_message[4] = {0, 1, 2, 3};
+	static unsigned char welcome_message[4] = {0, 0, 0, 0};
 
 	/* Register ourselves as a misc device: creates /dev/vga_led */
 	ret = misc_register(&vga_led_misc_device);
