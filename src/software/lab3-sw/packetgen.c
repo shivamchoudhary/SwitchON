@@ -22,7 +22,6 @@ void write_packet(const unsigned char *segs, int length, int src_port)
         vla.digit = src_port;
         vla.segments = segs[i];
         printf("%i ", segs[i]);
-//        if (ioctl(vga_led_fd, VGA_LED_WRITE_DIGIT, &vla)) {
         if(0){
             perror("ioctl(VGA_LED_WRITE_DIGIT) failed");
             return;
@@ -30,47 +29,29 @@ void write_packet(const unsigned char *segs, int length, int src_port)
     }
 }
 
-char* generate_packet(int length, char seed, char port){
-    char* packet = (char *) malloc(length);
-    int i;
-    packet[1] = seed;
-    packet[0] = port;
-    srand((unsigned) seed);
-    for(i=2; i<length-1; i++){
-        packet[i] = rand()%255 + 1;
-    }
-    packet[i] = '0';
-    return packet;
+// Send the pointer to the packet.
+void mkpkt(packet_t *pkt){
+        /*time_t t;*/
+        srand((rand()));
+        pkt->seed =rand()%SEED_BITS;
+        pkt->dport=rand()%DPORT_BITS;
+        pkt->length = rand()%250- MIN_PKT_LENGTH;
 }
-
 int main()
 {
     time_t t;
     srand((unsigned) time(&t));
     int i;
     static const char filename[] = "/dev/vga_led";
-    printf("VGA LED Userspace program started\n");
-    if ( (vga_led_fd = open(filename, O_RDWR)) == -1) {
-        fprintf(stderr, "could not open %s\n", filename);
-        return -1;
-    }
-
-    static char *input;
+    printf("Packet Generator\n");
+    printf("MIN_PKT_LENGTH:%i \n",MIN_PKT_LENGTH);
     for (i = 0 ; i < NUM_PACKETS ; i++) {
         // Define a new struct for packet.
         packet_t newpkt;
-        newpkt.length = rand()%255 + MIN_PKT_LENGTH;
-        newpkt.seed = rand()%255 +1; 
-        /*int length = rand()%96 + 5;*/
-        char seed = rand()%255 + 1;
-        char dest_port = rand()%4;
-        char src_port = rand()%4;
-        input = generate_packet(length, seed, dest_port);
-        printf("New packet of length: %i, at port %i\n", length, src_port);
-        write_packet(input, length, src_port);
-        printf("\n");
-        usleep(400000);
+        mkpkt(&newpkt);
+        printf("seed:%c,dport:%c,length:%c\n",newpkt.seed,newpkt.dport
+                        ,newpkt.length);
     }
-    printf("VGA LED Userspace program terminating\n");
+    printf("Packet Generation Complete!\n");
     return 0;
 }
