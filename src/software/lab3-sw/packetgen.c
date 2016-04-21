@@ -49,7 +49,6 @@ int main()
     srand((unsigned) time(&t));
     int i;
     static const char filename[] = "/dev/vga_led";
-
     printf("VGA LED Userspace program started\n");
     if ( (vga_led_fd = open(filename, O_RDWR)) == -1) {
         fprintf(stderr, "could not open %s\n", filename);
@@ -58,7 +57,11 @@ int main()
 
     static char *input;
     for (i = 0 ; i < NUM_PACKETS ; i++) {
-        int length = rand()%96 + 5;
+        // Define a new struct for packet.
+        packet_t newpkt;
+        newpkt.length = rand()%255 + MIN_PKT_LENGTH;
+        newpkt.seed = rand()%255 +1; 
+        /*int length = rand()%96 + 5;*/
         char seed = rand()%255 + 1;
         char dest_port = rand()%4;
         char src_port = rand()%4;
