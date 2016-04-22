@@ -49,9 +49,9 @@ struct vga_led_dev {
  * Write segments of a single digit
  * Assumes digit is in range and the device information has been set up
  */
-static void write_digit(int digit, u8 segments)
+static void write_digit(int digit, u32 segments)
 {
-	iowrite8(segments, dev.virtbase + digit);
+	iowrite32(segments, dev.virtbase + digit);
 	dev.segments[digit] = segments;
 }
 

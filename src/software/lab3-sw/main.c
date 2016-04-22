@@ -13,37 +13,39 @@
 #include <fcntl.h>
 #include "packetgen.h"
 #include "vga_led.h"
-#define TOHEX(x) (x > 9 ? (x - 10 + 'A') : (x + '0'));
-
-void write_segments(char segs[4]);
+void write_segments(int );
 static const char filename[] = "/dev/vga_led";
+
 vga_led_arg_t vla;
 int vga_led_fd;
 int main(){
         
         // Open the vga_led fd.
-        /*if (open(filename,O_RDWR)==-1){*/
-                /*fprintf(stderr,"Could not open device:%s\n",filename);*/
-                /*return -1; //Device not open exit.*/
-        /*}*/
-        for (int i=0;i<NUM_PACKETS;i++){
+        if ((vga_led_fd = open(filename,O_RDWR))==-1){
+                fprintf(stderr,"Could not open device:%s\n",filename);
+                return -1; //Device not open exit.
+        }
+        int i=0;
+        for (i=0;i<NUM_PACKETS;i++){
                 char packet[4];
                 mkpkt(packet); //newpkt generated send to hardware.
-                write_segments(packet); 
+                int value;
+                value  = (packet[3]<<24)|(packet[2]<<16)|(packet[1]<<8)                 |(packet[0]);
+                printf("value is %i\n",value);
+                write_segments(value); 
         }
 }
 
-void write_segments(char segs[4]){
+void write_segments(int segs){
         vga_led_arg_t vla;
         int i;
         for (i = 0 ; i < VGA_LED_DIGITS; i++) {
                 vla.digit = i; //address
-                vla.segments = segs[i]; //data
-                printf("segments: %u digits: %u\n",vla.segments,vla.digit);
-                /*if (ioctl(vga_led_fd, VGA_LED_WRITE_DIGIT, &vla)) {*/
-                        /*perror("ioctl(VGA_LED_WRITE_DIGIT) failed");*/
-                        /*return;*/
-                        /*}       */
+                vla.segments = segs; //dat
+                if (ioctl(vga_led_fd, VGA_LED_WRITE_DIGIT, &vla)) {
+                        perror("ioctl(VGA_LED_WRITE_DIGIT) failed");
+                        return;
+                        }    
         }
 }
 

@@ -7,8 +7,10 @@
 
 typedef struct {
   unsigned char digit;    /* 0, 1, .. , VGA_LED_DIGITS - 1 */
-  unsigned char segments; /* LSB is segment a, MSB is decimal point */
-} vga_led_arg_t;
+  //unsigned char segments; /* LSB is segment a, MSB is decimal point */
+  unsigned int segments;
+} 
+vga_led_arg_t;
 
 #define VGA_LED_MAGIC 'q'
 
