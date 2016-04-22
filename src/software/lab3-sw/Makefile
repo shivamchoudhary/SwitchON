@@ -19,9 +19,10 @@ module:
 
 clean:
 	${MAKE} -C ${KERNEL_SOURCE} SUBDIRS=${PWD} clean
-	${RM} hello
+	${RM} hello read_ram read_ram_size read_write_test
 
 socfpga.dtb : socfpga.dtb
 	dtc -O dtb -o socfpga.dtb socfpga.dts
-
+main: main.o packetgen.o
+packetgen.o:packetgen.c packetgen.h
 endif 

@@ -74,11 +74,9 @@ static long vga_led_ioctl(struct file *f, unsigned int cmd, unsigned long arg)
 		break;
 
 	case VGA_LED_READ_DIGIT:
-		printk(KERN_INFO "HCECKPOINT 1");
 		if (copy_from_user(&vla, (vga_led_arg_t *) arg,
 				   sizeof(vga_led_arg_t)))
 			return -EACCES;
-		printk(KERN_INFO "CHECKPOINT 2");
 		if (vla.digit > 8)
 			return -EINVAL;
 //		printk(KERN_INFO "VIRTBASE: %i, DIGIT %i", dev.virtbase, vla.digit);

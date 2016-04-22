@@ -1,7 +1,7 @@
 #ifndef _VGA_LED_H
 #define _VGA_LED_H
 
-#include <linux/ioctl.h>
+//#include <linux/ioctl.h>
 
 #define VGA_LED_DIGITS 8
 

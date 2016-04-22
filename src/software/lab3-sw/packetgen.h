@@ -1,10 +1,15 @@
+/*
+ * packetgen headers: 
+ * Contains various headers defining packet parameters.  
+ * 
+ * Team SwitchON
+ * Columbia University
+ */
+#include <stdint.h>
 #ifndef __PACKETGEN_H__
 #define __PACKETGEN_H__
 
-
-
 /*Packet parameters */
-
 
 //Crossbar Architecture
 /*
@@ -25,10 +30,11 @@
 #define MIN_LEN 1
 
 typedef struct{
-        char seed; /* The seed for the packet */
-        char length; /* Length of the packet*/
+        unsigned char seed; /* The seed for the packet */
+        uint16_t length; /* Length of the packet 16 bits */
         char dport; /* Destination port of the packet*/
 }packet_t;
+void mkpkt(char input[4]);
 
 
 #endif
