@@ -1,3 +1,6 @@
+CC=gcc
+INCLUDES = 
+LDFLAGS = -g
 ifneq (${KERNELRELEASE},)
 
 # KERNELRELEASE defined: we are being compiled as part of the Kernel
@@ -26,4 +29,7 @@ socfpga.dtb : socfpga.dtb
 main: main.o packetgen.o
 packetgen.o:packetgen.c packetgen.h
 .PHONY:all
+
+packetgen.o:packetgen.c packetgen.h
+        
 endif 

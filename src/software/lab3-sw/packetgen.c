@@ -18,4 +18,3 @@ void mkpkt(char input[4]){
         input[2] = rand()%250-MIN_PKT_LENGTH;
         input[3] = rand()%250-MIN_PKT_LENGTH;
 }
-

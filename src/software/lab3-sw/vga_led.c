@@ -42,7 +42,7 @@
 struct vga_led_dev {
 	struct resource res; /* Resource: our registers */
 	void __iomem *virtbase; /* Where registers can be accessed in memory */
-	u8 segments[VGA_LED_DIGITS];
+	u32 segments[VGA_LED_DIGITS];
 } dev;
 
 /*
@@ -51,7 +51,7 @@ struct vga_led_dev {
  */
 static void write_digit(int digit, u32 segments)
 {
-	iowrite32(segments, dev.virtbase + digit);
+	iowrite32(segments, dev.virtbase + 4*digit);
 	dev.segments[digit] = segments;
 }
 
@@ -62,14 +62,14 @@ static void write_digit(int digit, u32 segments)
  */
 static long vga_led_ioctl(struct file *f, unsigned int cmd, unsigned long arg)
 {
-	vga_led_arg_t vla;
+    vga_led_arg_t vla;
 	switch (cmd) {
 	case VGA_LED_WRITE_DIGIT:
 		if (copy_from_user(&vla, (vga_led_arg_t *) arg,
 				   sizeof(vga_led_arg_t)))
 			return -EACCES;
-		if (vla.digit > 8)
-			return -EINVAL;
+		/*if (vla.digit > 8)*/
+			/*return -EINVAL;*/
 		write_digit(vla.digit, vla.segments);
 		break;
 
@@ -77,10 +77,12 @@ static long vga_led_ioctl(struct file *f, unsigned int cmd, unsigned long arg)
 		if (copy_from_user(&vla, (vga_led_arg_t *) arg,
 				   sizeof(vga_led_arg_t)))
 			return -EACCES;
-		if (vla.digit > 8)
+		if (vla.digit > 15)
 			return -EINVAL;
-//		printk(KERN_INFO "VIRTBASE: %i, DIGIT %i", dev.virtbase, vla.digit);
-		vla.segments = ioread8(dev.virtbase + vla.digit);
+		int a;
+        a = ioread32(dev.virtbase + 4*vla.digit);
+        vla.segments = a;
+        printk(KERN_INFO "DEBUGGING: %i", a);
 	//	vla.segments = dev.segments[vla.digit];
 		if (copy_to_user((vga_led_arg_t *) arg, &vla,
 				 sizeof(vga_led_arg_t)))

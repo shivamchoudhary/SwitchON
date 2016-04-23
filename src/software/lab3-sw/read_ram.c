@@ -9,55 +9,61 @@
 #include <string.h>
 #include <unistd.h>
 int vga_led_fd;
-int received[4];
+int received[VGA_LED_DIGITS];
 
 int main(){
-  vga_led_arg_t vla;
-  int i, j;
-  static const char filename[] = "/dev/vga_led";
+    vga_led_arg_t vla;
+    int i, j;
+    static const char filename[] = "/dev/vga_led";
 
-  printf("VGA LED Userspace program started\n");
-  if ( (vga_led_fd = open(filename, O_RDWR)) == -1) {
-    fprintf(stderr, "could not open %s\n", filename);
-    return -1;
-  }
-  for(i=0; i<4; i++){
-    received[i] = 0;
-  }	
-
-  for(i=1; i<4; i++){
-    vla.digit = 7-i;
-    if (ioctl(vga_led_fd, VGA_LED_READ_DIGIT, &vla)) {
-      perror("ioctl(VGA_LED_WRITE_DIGIT) failed");
-      return;
+    printf("VGA LED Userspace program started\n");
+    if ( (vga_led_fd = open(filename, O_RDWR)) == -1) {
+        fprintf(stderr, "could not open %s\n", filename);
+        return -1;
     }
-    received[i] = vla.segments;
-    printf("%i\n", received[i]);
-  }
+    for(i=0; i<VGA_LED_DIGITS; i++){
+        received[i] = 0;
+    }	
 
-    vla.digit = 0;
-    if (ioctl(vga_led_fd, VGA_LED_READ_DIGIT, &vla)) {
-      perror("ioctl(VGA_LED_WRITE_DIGIT) failed");
-      return;
+    for(i=1; i<VGA_LED_DIGITS; i++){
+        vla.digit = 10+i;
+        if (ioctl(vga_led_fd, VGA_LED_READ_DIGIT, &vla)) {
+            perror("ioctl(VGA_LED_WRITE_DIGIT) failed");
+            return;
+        }
+        received[i] = vla.segments;
+        printf("%i\n", received[i]);
     }
-      printf("READ COUNT:%i ", vla.segments);	
 
-  for(i = 1; i<4; i++){
-    for(j = 0; j<received[i]; j++){
-      vla.digit = i;
-      if (ioctl(vga_led_fd, VGA_LED_READ_DIGIT, &vla)) {
-        perror("ioctl(VGA_LED_WRITE_DIGIT) failed");
-        return;
-      }
-      printf("%i ", vla.segments);	
+    for(i=1; i<VGA_LED_DIGITS; i++){
+        vla.digit = 7+i;
+        if (ioctl(vga_led_fd, VGA_LED_READ_DIGIT, &vla)) {
+            perror("ioctl(VGA_LED_WRITE_DIGIT) failed");
+            return;
+        }
+        printf("READ COUNT:%i ", vla.segments);	
     }
     printf("\n");
-  }
-    vla.digit = 0;
-    if (ioctl(vga_led_fd, VGA_LED_READ_DIGIT, &vla)) {
-      perror("ioctl(VGA_LED_WRITE_DIGIT) failed");
-      return;
+
+    for(i = 1; i<VGA_LED_DIGITS; i++){
+        for(j = 0; j<received[i]; j++){
+            vla.digit = i;
+            if (ioctl(vga_led_fd, VGA_LED_READ_DIGIT, &vla)) {
+                perror("ioctl(VGA_LED_WRITE_DIGIT) failed");
+                return;
+            }
+            printf("%i ", vla.segments);	
+        }
+        printf("\n");
     }
-      printf("READ COUNT:%i ", vla.segments);	
-  return 0;
+
+    for(i=1; i<VGA_LED_DIGITS; i++){
+        vla.digit = 7+i;
+        if (ioctl(vga_led_fd, VGA_LED_READ_DIGIT, &vla)) {
+            perror("ioctl(VGA_LED_WRITE_DIGIT) failed");
+            return;
+        }
+        printf("READ COUNT:%i ", vla.segments);	
+    }
+    return 0;
 }

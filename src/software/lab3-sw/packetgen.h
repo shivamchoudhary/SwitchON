@@ -38,3 +38,6 @@ void mkpkt(char input[4]);
 
 
 #endif
+
+void write_packet(const unsigned char *, int length,int src_port);
+char *generate_packet(int length,char seed,char port);

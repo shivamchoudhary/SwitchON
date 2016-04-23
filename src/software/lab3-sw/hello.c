@@ -1,7 +1,9 @@
 /*
+ * 
  * Userspace program that communicates with the led_vga device driver
  * primarily through ioctls
- *
+ * Heavily modified by 
+ * Ayush Jain Donovan Chan and Shivam Choudhary
  * Stephen A. Edwards
  * Columbia University
  */
@@ -17,10 +19,10 @@
 #include <string.h>
 #include <unistd.h>
 int vga_led_fd;
-int sent[8], received[8];
+int sent[VGA_LED_DIGITS], received[VGA_LED_DIGITS];
 
 /* Write the contents of the array to the display */
-void write_segments(const unsigned char segs[24])
+void write_segments(int segs[4])
 {
   vga_led_arg_t vla;
   int i;
@@ -34,17 +36,21 @@ void write_segments(const unsigned char segs[24])
   }
 }
 
-char* generate(){
-	int i = 0;
-	static char input[4];
-        for (i=1; i<4; i++){
-//		input[i] = 7;	
-		input[i] = rand()%3 + 1;
-		sent[input[i]]++;
+int* generate(){
+    int i = 0;
+	static int input[VGA_LED_DIGITS];
+    input[0] = 0;
+/*    input[5] = 0;
+    input[6] = 0;
+    input[7] = 0;
+    input[4] = 0;
+*/    
+    for (i=1; i<VGA_LED_DIGITS; i++){
+	    input[i] = rand() + 1;
 		printf("%i ",input[i]);
-        }
-	printf("\n");
-        return input;
+    }
+    printf("\n");
+    return input;
 }
 
 int main()
@@ -55,28 +61,27 @@ int main()
   srand((unsigned) time(&t));
   static const char filename[] = "/dev/vga_led";
 
-  printf("VGA LED Userspace program started\n");
+  printf(" Packet Generator started\n");
   if ( (vga_led_fd = open(filename, O_RDWR)) == -1) {
     fprintf(stderr, "could not open %s\n", filename);
     return -1;
   }
 
-  for(i=0; i<8; i++){
+  for(i=0; i<VGA_LED_DIGITS; i++){
     sent[i] = 0;
     received[i] = 0;
-  }	
-
-  static char *input;
+  }
+	
+  static int *input;
   for (i = 0 ; i < 32 ; i++) {
     input = generate();
     write_segments(input);
 //    usleep(1600000);
-
   }
 
   printf("VGA LED Userspace program terminating\n");
-  for(i=1; i<4; i++){
-    vla.digit = 7-i;
+  for(i=1; i<VGA_LED_DIGITS; i++){
+    vla.digit = 10+i;
     if (ioctl(vga_led_fd, VGA_LED_READ_DIGIT, &vla)) {
       perror("ioctl(VGA_LED_READ_DIGIT) failed");
       return;
