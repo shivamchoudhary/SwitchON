@@ -8,6 +8,7 @@
 #include <fcntl.h>
 #include <string.h>
 #include <unistd.h>
+
 int vga_led_fd;
 int received[VGA_LED_DIGITS];
 int totalpackets; // Total packets recieved from Switch
@@ -47,6 +48,8 @@ int main(){
     }
     printf("\n");
     int ram=1;
+    unsigned mask;
+    mask = (1<<2)-1;
     for(i = 1; i<VGA_LED_DIGITS; i++){
         for(j = 0; j<received[i]; j++){
             vla.digit = i;
@@ -55,20 +58,17 @@ int main(){
                 return;
             }
             if (ram==1){
-                if ((vla.segments%4)!=1){
-                    printf("Wrong on Ram1 %i",vla.segments);
-                }
+                printf("%u",vla.segments & mask);
             }
             else if (ram==2){
-                if ((vla.segments%2)!=0){
-                    printf("Wrong on Ram2 %i",vla.segments);
-            }
+                printf("%u",vla.segments & mask);
+
             }
             else if (ram==3){
-                if ((vla.segments%4)!=3){
-                    printf("Wrong on Ram3 %i",vla.segments);
-                }
+                printf("%u",vla.segments & mask);
+
             }
+    
         }
         ram = ram+1;
         printf("\n");
