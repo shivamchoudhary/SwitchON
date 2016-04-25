@@ -10,7 +10,7 @@
 #include <unistd.h>
 int vga_led_fd;
 int received[VGA_LED_DIGITS];
-
+int totalpackets; // Total packets recieved from Switch
 int main(){
     vga_led_arg_t vla;
     int i, j;
@@ -32,9 +32,11 @@ int main(){
             return;
         }
         received[i] = vla.segments;
+        totalpackets = totalpackets+received[i];
         printf("%i\n", received[i]);
+        
     }
-
+    printf("Sum:%i\n",totalpackets);
     for(i=1; i<VGA_LED_DIGITS; i++){
         vla.digit = 7+i;
         if (ioctl(vga_led_fd, VGA_LED_READ_DIGIT, &vla)) {
@@ -44,7 +46,7 @@ int main(){
         printf("READ COUNT:%i ", vla.segments);	
     }
     printf("\n");
-
+    int ram=1;
     for(i = 1; i<VGA_LED_DIGITS; i++){
         for(j = 0; j<received[i]; j++){
             vla.digit = i;
@@ -52,8 +54,23 @@ int main(){
                 perror("ioctl(VGA_LED_WRITE_DIGIT) failed");
                 return;
             }
-            printf("%i ", vla.segments);	
+            if (ram==1){
+                if ((vla.segments%4)!=1){
+                    printf("Wrong on Ram1 %i",vla.segments);
+                }
+            }
+            else if (ram==2){
+                if ((vla.segments%2)!=0){
+                    printf("Wrong on Ram2 %i",vla.segments);
+            }
+            }
+            else if (ram==3){
+                if ((vla.segments%4)!=3){
+                    printf("Wrong on Ram3 %i",vla.segments);
+                }
+            }
         }
+        ram = ram+1;
         printf("\n");
     }
 
