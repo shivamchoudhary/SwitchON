@@ -26,8 +26,17 @@ int main(){
         received[i] = 0;
     }	
 
+    for(i=1; i<7; i++){
+        vla.digit = 3+i;
+        if (ioctl(vga_led_fd, VGA_LED_READ_DIGIT, &vla)) {
+            perror("ioctl(VGA_LED_WRITE_DIGIT) failed");
+            return;
+        }
+        printf("READ COUNT:%i ", vla.segments);	
+    }
+    printf("\n");
     for(i=1; i<VGA_LED_DIGITS; i++){
-        vla.digit = 10+i;
+        vla.digit = 12+i;
         if (ioctl(vga_led_fd, VGA_LED_READ_DIGIT, &vla)) {
             perror("ioctl(VGA_LED_WRITE_DIGIT) failed");
             return;
@@ -39,7 +48,7 @@ int main(){
     }
     printf("Sum:%i\n",totalpackets);
     for(i=1; i<VGA_LED_DIGITS; i++){
-        vla.digit = 7+i;
+        vla.digit = 9+i;
         if (ioctl(vga_led_fd, VGA_LED_READ_DIGIT, &vla)) {
             perror("ioctl(VGA_LED_WRITE_DIGIT) failed");
             return;
@@ -75,12 +84,13 @@ int main(){
     }
 
     for(i=1; i<VGA_LED_DIGITS; i++){
-        vla.digit = 7+i;
+        vla.digit = 9+i;
         if (ioctl(vga_led_fd, VGA_LED_READ_DIGIT, &vla)) {
             perror("ioctl(VGA_LED_WRITE_DIGIT) failed");
             return;
         }
         printf("READ COUNT:%i ", vla.segments);	
     }
+    printf("\n");
     return 0;
 }

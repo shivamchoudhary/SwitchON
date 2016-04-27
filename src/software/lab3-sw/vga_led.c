@@ -49,7 +49,7 @@ struct vga_led_dev {
  * Write segments of a single digit
  * Assumes digit is in range and the device information has been set up
  */
-static void write_digit(int digit, u32 segments)
+static void write_digit(unsigned int digit, u32 segments)
 {
 	iowrite32(segments, dev.virtbase + 4*digit);
 	dev.segments[digit] = segments;
@@ -139,7 +139,7 @@ static int __init vga_led_probe(struct platform_device *pdev)
 
 	/* Arrange access to our registers */
 	dev.virtbase = of_iomap(pdev->dev.of_node, 0);
-	if (dev.virtbase == NULL) {
+    if (dev.virtbase == NULL) {
 		ret = -ENOMEM;
 		goto out_release_mem_region;
 	}

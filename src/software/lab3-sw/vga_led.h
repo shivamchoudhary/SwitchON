@@ -6,7 +6,7 @@
 #define VGA_LED_DIGITS 4
 
 typedef struct {
-  unsigned char  digit;
+  unsigned char digit;
   unsigned int segments; /* LSB is segment a, MSB is decimal point */
 } vga_led_arg_t;
 
