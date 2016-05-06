@@ -10,11 +10,10 @@
 #include <stdlib.h>
 #include "packetgen.h"
 
-// Send the pointer to the packet.
 void mkpkt(char input[4]){
         srand((rand()));
-        input[0] = rand()%DPORT_BITS;
-        input[1] = rand()%SEED_BITS;
-        input[2] = rand()%250-MIN_PKT_LENGTH;
-        input[3] = rand()%250-MIN_PKT_LENGTH;
+        input[0] = rand()%DPORT_BITS;  // LSB 8 bits destination port.
+        input[1] = rand()%SEED_BITS;  // Seed for the data. 
+        input[2] = rand()%250-MIN_PKT_LENGTH; // Length of the packet.
+        input[3] = rand()%250-MIN_PKT_LENGTH; // Length of packet  MSB
 }

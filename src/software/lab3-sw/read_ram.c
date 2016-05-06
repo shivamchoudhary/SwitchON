@@ -17,24 +17,26 @@ int main(){
     int i, j;
     static const char filename[] = "/dev/vga_led";
 
-    printf("VGA LED Userspace program started\n");
+    printf("Reading the RAMS\n");
     if ( (vga_led_fd = open(filename, O_RDWR)) == -1) {
         fprintf(stderr, "could not open %s\n", filename);
         return -1;
     }
     for(i=0; i<VGA_LED_DIGITS; i++){
         received[i] = 0;
-    }	
-
+    }
+    // Read counts from Input and output RAM's	
     for(i=1; i<7; i++){
-        vla.digit = 3+i;
+        vla.digit = 3+i; // In Buffer.sv we set the address from 4
         if (ioctl(vga_led_fd, VGA_LED_READ_DIGIT, &vla)) {
             perror("ioctl(VGA_LED_WRITE_DIGIT) failed");
             return;
         }
-        printf("READ COUNT:%i ", vla.segments);	
+        // Ram 1->3 input ram_rdaddress,Ram 1->3 input ram_wr address.
+        printf("READ COUNT:%i ",vla.segments);
     }
     printf("\n");
+    // Output Ram's count
     for(i=1; i<VGA_LED_DIGITS; i++){
         vla.digit = 12+i;
         if (ioctl(vga_led_fd, VGA_LED_READ_DIGIT, &vla)) {
@@ -47,25 +49,27 @@ int main(){
         
     }
     printf("Sum:%i\n",totalpackets);
-    for(i=1; i<VGA_LED_DIGITS; i++){
+    for(i=1; i<7; i++){
         vla.digit = 9+i;
         if (ioctl(vga_led_fd, VGA_LED_READ_DIGIT, &vla)) {
             perror("ioctl(VGA_LED_WRITE_DIGIT) failed");
             return;
         }
-        printf("READ COUNT:%i ", vla.segments);	
+        printf("RAM COUNT:%i ", vla.segments);	
     }
     printf("\n");
     int ram=1;
     unsigned mask;
     mask = (1<<2)-1;
     for(i = 1; i<VGA_LED_DIGITS; i++){
+        // Start extracting values from the Output Rams
         for(j = 0; j<received[i]; j++){
             vla.digit = i;
             if (ioctl(vga_led_fd, VGA_LED_READ_DIGIT, &vla)) {
                 perror("ioctl(VGA_LED_WRITE_DIGIT) failed");
                 return;
             }
+            printf(" %i ",vla.segments);
             if (ram==1){
                 printf("%u",vla.segments & mask);
             }
@@ -77,7 +81,6 @@ int main(){
                 printf("%u",vla.segments & mask);
 
             }
-    
         }
         ram = ram+1;
         printf("\n");

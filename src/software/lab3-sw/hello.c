@@ -69,7 +69,8 @@ int main()
     }
 
     static int *input;
-    for (i = 0 ; i < 32 ; i++) {
+
+    for (i = 0 ; i < 5 ; i++) {
         input = generate();
         write_segments(input);
         //    usleep(1600000);
@@ -84,6 +85,19 @@ int main()
         }
         received[i] = vla.segments;
         printf("%i:%i\n", sent[i], received[i]);
+    }
+
+    vla.digit = 15;
+    vla.segments = 0;
+    if (ioctl(vga_led_fd, VGA_LED_WRITE_DIGIT, &vla)) {
+        perror("ioctl(VGA_LED_WRITE_DIGIT) failed");
+        return;
+    }
+    vla.digit = 14;
+    vla.segments = 0;
+    if (ioctl(vga_led_fd, VGA_LED_WRITE_DIGIT, &vla)) {
+        perror("ioctl(VGA_LED_WRITE_DIGIT) failed");
+        return;
     }
     return 0;
 }

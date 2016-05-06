@@ -82,7 +82,6 @@ static long vga_led_ioctl(struct file *f, unsigned int cmd, unsigned long arg)
 		int a;
         a = ioread32(dev.virtbase + 4*vla.digit);
         vla.segments = a;
-        printk(KERN_INFO "DEBUGGING: %i", a);
 	//	vla.segments = dev.segments[vla.digit];
 		if (copy_to_user((vga_led_arg_t *) arg, &vla,
 				 sizeof(vga_led_arg_t)))
