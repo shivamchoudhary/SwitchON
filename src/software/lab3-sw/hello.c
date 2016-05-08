@@ -1,9 +1,6 @@
 /*
- * 
  * Userspace program that communicates with the led_vga device driver
  * primarily through ioctls
- * Heavily modified by 
- * Ayush Jain Donovan Chan and Shivam Choudhary
  * Stephen A. Edwards
  * Columbia University
  */
@@ -18,6 +15,7 @@
 #include <fcntl.h>
 #include <string.h>
 #include <unistd.h>
+#include "packetgen.h"
 int vga_led_fd;
 int sent[VGA_LED_DIGITS], received[VGA_LED_DIGITS];
 
@@ -26,7 +24,7 @@ void write_segments(int segs[4])
 {
     vga_led_arg_t vla;
     int i;
-    for (i = 1 ; i < VGA_LED_DIGITS; i++) {
+    for (i = 1 ; i < NUM_RAMS; i++) {
         vla.digit = i;
         vla.segments = segs[i];
         if (ioctl(vga_led_fd, VGA_LED_WRITE_DIGIT, &vla)) {
@@ -37,13 +35,11 @@ void write_segments(int segs[4])
     }
     printf("\n");
 }
-
 int* generate(){
     int i = 0;
     static int input[VGA_LED_DIGITS];
     input[0] = 0;
     for (i=1; i<VGA_LED_DIGITS; i++){
-   //     input[i] = 155;
         input[i] = rand() + 1;
     }
     return input;
@@ -73,7 +69,6 @@ int main()
     for (i = 0 ; i < 5 ; i++) {
         input = generate();
         write_segments(input);
-        //    usleep(1600000);
     }
 
     printf("VGA LED Userspace program terminating\n");
@@ -84,10 +79,9 @@ int main()
             return;
         }
         received[i] = vla.segments;
-        printf("%i:%i\n", sent[i], received[i]);
     }
 
-    vla.digit = 15;
+    vla.digit = 15; // For starting the Scheduler
     vla.segments = 0;
     if (ioctl(vga_led_fd, VGA_LED_WRITE_DIGIT, &vla)) {
         perror("ioctl(VGA_LED_WRITE_DIGIT) failed");

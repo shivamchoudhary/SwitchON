@@ -19,15 +19,16 @@
             1 2 3
 */
 //Packet Structure (all length in bytes)
-//      |Not Used|Seed|LENGTH|DPORT|
-//          1        1    1      1
+//      |SEED|LENGTH|LENGTH|DPORT|
+//        1      1      1      1
 // Destination port parameters
-#define MIN_PKT_LENGTH 4
 #define MIN_DPORT 1 // Minimum dst port that must be generated
-#define DPORT_BITS 256 //8 Bytes
-#define NUM_PACKETS 64 // Generate number of packets
-#define SEED_BITS 256 // Keep the seed of 1 bytes
-#define MIN_LEN 1
+#define DPORT_BITS 256 //1 Byte
+#define NUM_PACKETS 4 // Packets to be sent on each input RAMS.
+#define SEED_BITS 256 // Keep the seed of 1 byte
+#define WRITE_ENABLE_SCHEDULER 15 // Write Enable the scheduler.
+#define READ_ENABLE_SCHEDULER 14 // Read Enable the Ouput Rams. 
+#define NUM_RAMS 4 // Define the number of RAMS.
 
 typedef struct{
         unsigned char seed; /* The seed for the packet */
@@ -35,9 +36,7 @@ typedef struct{
         char dport; /* Destination port of the packet*/
 }packet_t;
 void mkpkt(char input[4]);
-
-
 #endif
 
-void write_packet(const unsigned char *, int length,int src_port);
-char *generate_packet(int length,char seed,char port);
+void write_segments(static const char filename[], int segs[4]);
+int * generate();

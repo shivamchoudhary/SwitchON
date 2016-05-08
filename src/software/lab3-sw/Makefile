@@ -29,7 +29,6 @@ socfpga.dtb : socfpga.dtb
 main: main.o packetgen.o
 packetgen.o:packetgen.c packetgen.h
 .PHONY:all
-
 packetgen.o:packetgen.c packetgen.h
         
 endif 

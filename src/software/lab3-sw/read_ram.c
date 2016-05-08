@@ -65,18 +65,23 @@ int main(){
         // Start extracting values from the Output Rams
         for(j = 0; j<received[i]; j++){
             vla.digit = i;
+            // Extract the values from the rams. 
             if (ioctl(vga_led_fd, VGA_LED_READ_DIGIT, &vla)) {
                 perror("ioctl(VGA_LED_WRITE_DIGIT) failed");
                 return;
             }
             printf(" %i ",vla.segments);
+            // It is supposed to get received[i] values.
+            // Data from RAM1
             if (ram==1){
                 printf("%u",vla.segments & mask);
             }
+            // Data from RAM2
             else if (ram==2){
                 printf("%u",vla.segments & mask);
 
             }
+            // Data from RAM3
             else if (ram==3){
                 printf("%u",vla.segments & mask);
 
