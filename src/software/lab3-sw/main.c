@@ -41,21 +41,16 @@ int main()
         sent[i] = 0;
         received[i] = 0;
     }
-    static int *input;
-    for (i = 0 ; i < 5 ; i++) {
-        input = generate();
-        write_segments(vga_led_fd, input);
+    int* input;
+    char* packet_info;
+    for (i = 0 ; i < NUM_PACKETS ; i++) {
+        packet_info = mkpkt();
+        input = generate(packet_info);
+        int sport = i%3 + 1;
+        printf("Sending packet to port: %u, of length: %u, with seed: %u\n", packet_info[0], packet_info[2], packet_info[1]);
+        write_segments(vga_led_fd, input, sport, packet_info[2]);
     }
     printf("Done Sending Packets, terminating\n");
-    for(i=1; i<NUM_PACKETS; i++){
-        vla.digit = 12+i;
-        if (ioctl(vga_led_fd, VGA_LED_READ_DIGIT, &vla)) {
-            perror("ioctl(VGA_LED_READ_DIGIT) failed");
-            return;
-        }
-        received[i] = vla.segments;
-    }
-
     vla.digit = 15; // For starting the Scheduler
     vla.segments = 0;
     if (ioctl(vga_led_fd, VGA_LED_WRITE_DIGIT, &vla)) {

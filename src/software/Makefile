@@ -26,7 +26,7 @@ LDLIBS =
 # *.o files in main,now other files might have internal dependencies like packet_gen 
 # depends on common hence it is compiled together.
 #
-
+.PHONY:
 main: main.o packetgen.o common.o  
 
 main.o: main.c packetgen.h

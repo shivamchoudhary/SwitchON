@@ -29,7 +29,7 @@ int main(){
     for(i=1; i<7; i++){
         vla.digit = 3+i; // In Buffer.sv we set the address from 4
         if (ioctl(vga_led_fd, VGA_LED_READ_DIGIT, &vla)) {
-            perror("ioctl(VGA_LED_WRITE_DIGIT) failed");
+            perror("ioctl(VGA_LED_READ_DIGIT) failed");
             return;
         }
         // Ram 1->3 input ram_rdaddress,Ram 1->3 input ram_wr address.
@@ -40,7 +40,7 @@ int main(){
     for(i=1; i<VGA_LED_DIGITS; i++){
         vla.digit = 12+i;
         if (ioctl(vga_led_fd, VGA_LED_READ_DIGIT, &vla)) {
-            perror("ioctl(VGA_LED_WRITE_DIGIT) failed");
+            perror("ioctl(VGA_LED_READ_DIGIT) failed");
             return;
         }
         received[i] = vla.segments;
@@ -52,7 +52,7 @@ int main(){
     for(i=1; i<7; i++){
         vla.digit = 9+i;
         if (ioctl(vga_led_fd, VGA_LED_READ_DIGIT, &vla)) {
-            perror("ioctl(VGA_LED_WRITE_DIGIT) failed");
+            perror("ioctl(VGA_LED_READ_DIGIT) failed");
             return;
         }
         printf("RAM COUNT:%i ", vla.segments);	
@@ -67,12 +67,15 @@ int main(){
             vla.digit = i;
             // Extract the values from the rams. 
             if (ioctl(vga_led_fd, VGA_LED_READ_DIGIT, &vla)) {
-                perror("ioctl(VGA_LED_WRITE_DIGIT) failed");
+                perror("ioctl(VGA_LED_READ_DIGIT) failed");
                 return;
             }
             printf(" %i ",vla.segments);
+            if(vla.segments == 0)
+                printf("\n");
             // It is supposed to get received[i] values.
             // Data from RAM1
+/*
             if (ram==1){
                 printf("%u",vla.segments & mask);
             }
@@ -86,15 +89,16 @@ int main(){
                 printf("%u",vla.segments & mask);
 
             }
+*/
         }
         ram = ram+1;
-        printf("\n");
+        printf("\n\n");
     }
 
     for(i=1; i<VGA_LED_DIGITS; i++){
         vla.digit = 9+i;
         if (ioctl(vga_led_fd, VGA_LED_READ_DIGIT, &vla)) {
-            perror("ioctl(VGA_LED_WRITE_DIGIT) failed");
+            perror("ioctl(VGA_LED_READ_DIGIT) failed");
             return;
         }
         printf("READ COUNT:%i ", vla.segments);	

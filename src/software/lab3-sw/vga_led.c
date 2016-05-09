@@ -145,7 +145,7 @@ static int __init vga_led_probe(struct platform_device *pdev)
 
 	/* Display a welcome message */
 	for (i = 0; i < VGA_LED_DIGITS; i++)		
-		write_digit(i, welcome_message[i]);
+//		write_digit(i, welcome_message[i]);
 	return 0;
 
 out_release_mem_region:

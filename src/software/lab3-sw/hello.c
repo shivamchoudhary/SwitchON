@@ -15,7 +15,7 @@
 #include <fcntl.h>
 #include <string.h>
 #include <unistd.h>
-#include "packetgen.h"
+//#include "packetgen.h"
 int vga_led_fd;
 int sent[VGA_LED_DIGITS], received[VGA_LED_DIGITS];
 
@@ -24,7 +24,7 @@ void write_segments(int segs[4])
 {
     vga_led_arg_t vla;
     int i;
-    for (i = 1 ; i < NUM_RAMS; i++) {
+    for (i = 1 ; i < 4; i++) {
         vla.digit = i;
         vla.segments = segs[i];
         if (ioctl(vga_led_fd, VGA_LED_WRITE_DIGIT, &vla)) {
@@ -32,9 +32,21 @@ void write_segments(int segs[4])
             return;
         }
         printf("%i ", vla.segments);
+        vla.segments = segs[i];
+        if (ioctl(vga_led_fd, VGA_LED_WRITE_DIGIT, &vla)) {
+            perror("ioctl(VGA_LED_WRITE_DIGIT) failed");
+            return;
+        }
+        printf("%i ", vla.segments);
+        vla.segments = 0;
+        if (ioctl(vga_led_fd, VGA_LED_WRITE_DIGIT, &vla)) {
+            perror("ioctl(VGA_LED_WRITE_DIGIT) failed");
+            return;
+        }
     }
     printf("\n");
 }
+
 int* generate(){
     int i = 0;
     static int input[VGA_LED_DIGITS];

@@ -13,7 +13,7 @@ else
 	KERNEL_SOURCE := /usr/src/linux
         PWD := $(shell pwd)
 
-default: module hello read_ram_size read_ram read_write_test
+default: module hello read_ram
 	 rmmod vga_led.ko
 	 insmod vga_led.ko
 
@@ -22,12 +22,16 @@ module:
 
 clean:
 	${MAKE} -C ${KERNEL_SOURCE} SUBDIRS=${PWD} clean
-	${RM} hello read_ram read_ram_size read_write_test
+	${RM} hello read_ram
 
 socfpga.dtb : socfpga.dtb
 	dtc -O dtb -o socfpga.dtb socfpga.dts
 main: main.o packetgen.o
-packetgen.o:packetgen.c packetgen.h
+
+validator.o: validator.c 
+
+timer.o: timer.c
+
 .PHONY:all
 packetgen.o:packetgen.c packetgen.h
         
