@@ -43,10 +43,10 @@ int main()
     }
     int* input;
     char* packet_info;
-    for (i = 0 ; i < NUM_PACKETS ; i++) {
+    for (i = 0 ; i < 4; i++) {
         packet_info = mkpkt();
         input = generate(packet_info);
-        int sport = i%3 + 1;
+        int sport = i%4;
         printf("Sending packet to port: %u, of length: %u, with seed: %u\n", packet_info[0], packet_info[2], packet_info[1]);
         write_segments(vga_led_fd, input, sport, packet_info[2]);
     }

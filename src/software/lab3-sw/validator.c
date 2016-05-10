@@ -27,18 +27,26 @@ int main()
         packets[i] = 0;
     }
     // Output Ram's count
-    for(i=1; i<VGA_LED_DIGITS; i++){
+    for(i=0; i<VGA_LED_DIGITS; i++){
         vla.digit = 12+i;
         if (ioctl(vga_led_fd, VGA_LED_READ_DIGIT, &vla)) {
             perror("ioctl(VGA_LED_READ_DIGIT) failed");
             return;
         }
         received[i] = vla.segments;
-        printf("RAM%i COUNT: %i\n", i, received[i]);
-        
+        printf("RAM%i WRITE COUNT: %i\n", i, received[i]);
     }
-    for(i = 1; i<VGA_LED_DIGITS; i++){
+    for(i=0; i<VGA_LED_DIGITS; i++){
+        vla.digit = 8+i;
+        if (ioctl(vga_led_fd, VGA_LED_READ_DIGIT, &vla)) {
+            perror("ioctl(VGA_LED_READ_DIGIT) failed");
+            return;
+        }
+        printf("RAM%i READ COUNT: %i\n", i, vla.segments);
+    }
+    for(i = 0; i<VGA_LED_DIGITS; i++){
         // Start extracting values from the Output Rams
+        printf("Fetching from ram %i\n", i);
         vla.digit = i;
         for(j=0; j<received[i]; j++){
             // Extract the values from the rams. 
@@ -46,25 +54,31 @@ int main()
                 perror("ioctl(VGA_LED_READ_DIGIT) failed");
                 return;
             }
-//            if(vla.segments == 0)
-//                continue;
+            if(vla.segments == 0){
+                printf("Received 0");
+                continue;
+            }
             unsigned int seedMask = 65280;
             int length = vla.segments;
             int seed = length;
             int dport = seed;
             length = length>>16;
             seed = ((seed & seedMask)>>8);
+            printf("DPORT: %i\n", dport);
             dport = dport%4;
-            if(!(dport==i || dport==0 && i==2)){
+            printf("DPORT FROM HEADER: %i and i: %i\n", dport, i);
+            if(dport!=i){
                 printf("Invalid RAM location and dport from packet header\n");
                 exit(1);
             }
+            printf("%i ", vla.segments);
             srand(seed);
             for(k=1; k<length; k++){
                 if (ioctl(vga_led_fd, VGA_LED_READ_DIGIT, &vla)) {
                     perror("ioctl(VGA_LED_READ_DIGIT) failed");
                     return;
                 }
+                printf("%i ", vla.segments);
                 if(k<length-1){
                     int a = rand() + 1;
                     if(vla.segments != a){
@@ -83,9 +97,10 @@ int main()
     }
     printf("Total Packets: %i\n", total_packets);
     printf("Individual ram packets:\n");
-    for(i = 1; i < 4; i++)
+    for(i = 0; i < 4; i++){
         printf("RAM %i Packet count: %i\n", i, packets[i]);
-    vla.digit = 0;
+    }
+    vla.digit = 7;
     if (ioctl(vga_led_fd, VGA_LED_READ_DIGIT, &vla)) {
         perror("ioctl(VGA_LED_READ_DIGIT) failed");
         return;

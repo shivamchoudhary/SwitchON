@@ -8,31 +8,23 @@
 #include <fcntl.h>
 #include <string.h>
 #include <unistd.h>
+int vga_led_fd;
 
-int read_size(){
-    int vga_led_fd;
+/* Write the contents of the array to the display */
+int main()
+{
     vga_led_arg_t vla;
-    int i;
     static const char filename[] = "/dev/vga_led";
-
-    printf("VGA LED Userspace program started\n");
-
+    printf(" Start Userspace Validation\n");
     if ( (vga_led_fd = open(filename, O_RDWR)) == -1) {
         fprintf(stderr, "could not open %s\n", filename);
         return -1;
     }
 
-    for(i=1; i<7; i++){
-        vla.digit = 14-i;
-        if (ioctl(vga_led_fd, VGA_LED_READ_DIGIT, &vla)) {
-            perror("ioctl(vga_led_read_digit) failed");
-            return;
-        }
-        printf("%i\n", vla.segments);
+    vla.digit = 13;
+    vla.segments = 0;
+    if (ioctl(vga_led_fd, VGA_LED_WRITE_DIGIT, &vla)) {
+        perror("ioctl(VGA_LED_WRITE_DIGIT) failed");
+        return;
     }
-    return 0;
-}
-
-int main(){
-    return read_size();
 }

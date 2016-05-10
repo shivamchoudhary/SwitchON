@@ -25,9 +25,10 @@ int main(){
     for(i=0; i<VGA_LED_DIGITS; i++){
         received[i] = 0;
     }
+/*
     // Read counts from Input and output RAM's	
-    for(i=1; i<7; i++){
-        vla.digit = 3+i; // In Buffer.sv we set the address from 4
+    for(i=0; i<8; i++){
+        vla.digit = 8+i; // In Buffer.sv we set the address from 4
         if (ioctl(vga_led_fd, VGA_LED_READ_DIGIT, &vla)) {
             perror("ioctl(VGA_LED_READ_DIGIT) failed");
             return;
@@ -35,9 +36,10 @@ int main(){
         // Ram 1->3 input ram_rdaddress,Ram 1->3 input ram_wr address.
         printf("READ COUNT:%i ",vla.segments);
     }
+*/
     printf("\n");
     // Output Ram's count
-    for(i=1; i<VGA_LED_DIGITS; i++){
+    for(i=0; i<VGA_LED_DIGITS; i++){
         vla.digit = 12+i;
         if (ioctl(vga_led_fd, VGA_LED_READ_DIGIT, &vla)) {
             perror("ioctl(VGA_LED_READ_DIGIT) failed");
@@ -49,8 +51,8 @@ int main(){
         
     }
     printf("Sum:%i\n",totalpackets);
-    for(i=1; i<7; i++){
-        vla.digit = 9+i;
+    for(i=0; i<8; i++){
+        vla.digit = 8+i;
         if (ioctl(vga_led_fd, VGA_LED_READ_DIGIT, &vla)) {
             perror("ioctl(VGA_LED_READ_DIGIT) failed");
             return;
@@ -61,7 +63,7 @@ int main(){
     int ram=1;
     unsigned mask;
     mask = (1<<2)-1;
-    for(i = 1; i<VGA_LED_DIGITS; i++){
+    for(i = 0; i<VGA_LED_DIGITS; i++){
         // Start extracting values from the Output Rams
         for(j = 0; j<received[i]; j++){
             vla.digit = i;
@@ -95,8 +97,8 @@ int main(){
         printf("\n\n");
     }
 
-    for(i=1; i<VGA_LED_DIGITS; i++){
-        vla.digit = 9+i;
+    for(i=0; i<VGA_LED_DIGITS; i++){
+        vla.digit = 8+i;
         if (ioctl(vga_led_fd, VGA_LED_READ_DIGIT, &vla)) {
             perror("ioctl(VGA_LED_READ_DIGIT) failed");
             return;

@@ -32,6 +32,8 @@ validator.o: validator.c
 
 timer.o: timer.c
 
+resetter.o: resetter.c
+
 .PHONY:all
 packetgen.o:packetgen.c packetgen.h
         

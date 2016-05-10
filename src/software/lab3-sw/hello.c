@@ -24,7 +24,7 @@ void write_segments(int segs[4])
 {
     vga_led_arg_t vla;
     int i;
-    for (i = 1 ; i < 4; i++) {
+    for (i = 0 ; i < 4; i++) {
         vla.digit = i;
         vla.segments = segs[i];
         if (ioctl(vga_led_fd, VGA_LED_WRITE_DIGIT, &vla)) {
@@ -51,7 +51,7 @@ int* generate(){
     int i = 0;
     static int input[VGA_LED_DIGITS];
     input[0] = 0;
-    for (i=1; i<VGA_LED_DIGITS; i++){
+    for (i=0; i<VGA_LED_DIGITS; i++){
         input[i] = rand() + 1;
     }
     return input;
@@ -84,8 +84,8 @@ int main()
     }
 
     printf("VGA LED Userspace program terminating\n");
-    for(i=1; i<VGA_LED_DIGITS; i++){
-        vla.digit = 12+i;
+    for(i=0; i<VGA_LED_DIGITS; i++){
+        vla.digit = 8+i;
         if (ioctl(vga_led_fd, VGA_LED_READ_DIGIT, &vla)) {
             perror("ioctl(VGA_LED_READ_DIGIT) failed");
             return;
