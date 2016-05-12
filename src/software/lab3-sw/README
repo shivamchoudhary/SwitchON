@@ -1,3 +1,15 @@
+Welcome to Switch ON's Software Code.
+
+# To Compile
+    * type make ("Warning, it will try to install the vgaled.ko module")
+    * type make main ("The main file for sending the data to Switch")
+    * type make validator ("It will compile the validator")
+# Executables:
+    All executables can be executed using ./ format. For eg ./main, ./validator
+
+
+
+# Original README
 Simple Device Driver for the VGA 7-segment LED emulator
 
 make

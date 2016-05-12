@@ -22,19 +22,21 @@ module:
 
 clean:
 	${MAKE} -C ${KERNEL_SOURCE} SUBDIRS=${PWD} clean
-	${RM} hello read_ram
+	${RM} hello read_ram validator packetgen main resetter
 
 socfpga.dtb : socfpga.dtb
 	dtc -O dtb -o socfpga.dtb socfpga.dts
+
+# Make the main file
 main: main.o packetgen.o
 
+# Make the validator
 validator.o: validator.c 
 
 timer.o: timer.c
 
 resetter.o: resetter.c
-
-.PHONY:all
+# Make the Packet Generator
 packetgen.o:packetgen.c packetgen.h
         
 endif 

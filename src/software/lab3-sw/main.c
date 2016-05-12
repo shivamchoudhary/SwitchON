@@ -30,34 +30,37 @@ int main()
     time_t t; // Use the system time to seed the pseudo random generator
     srand((unsigned) time(&t));
     static const char filename[] = "/dev/vga_led";
-
     printf("Switch ON Packet Generator started\n");
     if ( (vga_led_fd = open(filename, O_RDWR)) == -1) {
         fprintf(stderr, "could not open %s\n", filename);
         return -1;
     }
-
     for(i=0; i<VGA_LED_DIGITS; i++){
         sent[i] = 0;
         received[i] = 0;
     }
     int* input;
     char* packet_info;
-    for (i = 0 ; i < 4; i++) {
+    // Generate the packet and sends it.
+    for (i = 0 ; i < NUM_PACKETS; i++) {
         packet_info = mkpkt();
         input = generate(packet_info);
         int sport = i%4;
         printf("Sending packet to port: %u, of length: %u, with seed: %u\n", packet_info[0], packet_info[2], packet_info[1]);
         write_segments(vga_led_fd, input, sport, packet_info[2]);
+        sent[packet_info[0]%4]++;
     }
-    printf("Done Sending Packets, terminating\n");
-    vla.digit = 15; // For starting the Scheduler
-    vla.segments = 0;
+    for(i=0; i<VGA_LED_DIGITS; i++){
+        printf("Packets sent to RAM %i: %i\n", i, sent[i]);
+    }
+    printf("Done Sending Packets, run validator to check!!,terminating\n");
+    vla.digit = WRITE_ENABLE_SCHEDULER; // For starting the Scheduler
+    vla.segments = 0; // No address needed
     if (ioctl(vga_led_fd, VGA_LED_WRITE_DIGIT, &vla)) {
         perror("ioctl(VGA_LED_WRITE_DIGIT) failed");
         return;
     }
-    vla.digit = 14;
+    vla.digit = READ_ENABLE_SCHEDULER; // For Read Enabling the Scheduling
     vla.segments = 0;
     if (ioctl(vga_led_fd, VGA_LED_WRITE_DIGIT, &vla)) {
         perror("ioctl(VGA_LED_WRITE_DIGIT) failed");
